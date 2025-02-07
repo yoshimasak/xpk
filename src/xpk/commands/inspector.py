@@ -144,7 +144,7 @@ def inspector(args) -> None:
       (
           (
               'gcloud beta container clusters list --project'
-              f' {args.project} --region {zone_to_region(args.zone)} | grep -e'
+              f' {args.project} --zone {args.zone} | grep -e'
               f' NAME -e {args.cluster}'
           ),
           'GKE: Cluster Details',
@@ -166,7 +166,7 @@ def inspector(args) -> None:
       (
           (
               f'gcloud beta container node-pools list --cluster {args.cluster} '
-              f' --project={args.project} --region={zone_to_region(args.zone)}'
+              f' --project={args.project} --zone={args.zone}'
           ),
           'GKE: Node pool Details',
       ),
@@ -315,19 +315,19 @@ def inspector(args) -> None:
     workload_links = [(
         f'Cloud Console for the workload {args.workload}',
         # pylint: disable=line-too-long
-        f'https://console.cloud.google.com/kubernetes/service/{zone_to_region(args.zone)}/{args.cluster}/default/{args.workload}/details?project={args.project}',
+        f'https://console.cloud.google.com/kubernetes/service/{args.zone}/{args.cluster}/default/{args.workload}/details?project={args.project}',
     )]
 
   links = [
       (
           'Cloud Console for the GKE Cluster',
           # pylint: disable=line-too-long
-          f'https://console.cloud.google.com/kubernetes/clusters/details/{zone_to_region(args.zone)}/{args.cluster}/details?project={args.project}',
+          f'https://console.cloud.google.com/kubernetes/clusters/details/{args.zone}/{args.cluster}/details?project={args.project}',
       ),
       (
           'Cloud Console for all workloads in GKE Cluster',
           # pylint: disable=line-too-long
-          f'https://console.cloud.google.com/kubernetes/workload/overview?project={args.project}&pageState=((gke%2F{zone_to_region(args.zone)}%2F{args.cluster}))',
+          f'https://console.cloud.google.com/kubernetes/workload/overview?project={args.project}&pageState=((gke%2F{args.zone}%2F{args.cluster}))',
       ),
       (
           'Cloud Console for IAM Permissions',

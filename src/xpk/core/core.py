@@ -920,7 +920,7 @@ def get_all_clusters_programmatic(args) -> tuple[list[str], int]:
   """
   command = (
       'gcloud container clusters list'
-      f' --project={args.project} --region={zone_to_region(args.zone)}'
+      f' --project={args.project} --zone={args.zone}'
       ' --format="csv[no-heading](name)"'
   )
   return_code, raw_cluster_output = run_command_for_value(
@@ -948,7 +948,7 @@ def get_nodepool_zone(args, nodepool_name) -> tuple[int, str]:
   command = (
       f'gcloud beta container node-pools describe {nodepool_name}'
       f' --cluster {args.cluster} --project={args.project}'
-      f' --region={zone_to_region(args.zone)} --format="value(locations)"'
+      f' --zone={args.zone} --format="value(locations)"'
   )
   return_code, nodepool_zone = run_command_for_value(
       command, 'Get Node Pool Zone', args
@@ -1000,7 +1000,7 @@ def get_all_nodepools_programmatic(args) -> tuple[list[str], int]:
   command = (
       'gcloud beta container node-pools list'
       ' --cluster'
-      f' {args.cluster} --project={args.project} --region={zone_to_region(args.zone)}'
+      f' {args.cluster} --project={args.project} --zone={args.zone}'
       ' --format="csv[no-heading](name)"'
   )
   return_code, raw_nodepool_output = run_command_for_value(
@@ -1210,7 +1210,7 @@ def run_gke_node_pool_create_command(
         command = (
             'gcloud beta container node-pools delete'
             f' {node_pool_name} --cluster={args.cluster}'
-            f' --zone={zone_to_region(args.zone)}'
+            f' --zone={args.zone}'
             f' --project={args.project} --quiet'
         )
         task = f'NodepoolDelete-{node_pool_name}'
@@ -1279,7 +1279,7 @@ def run_gke_node_pool_create_command(
     command = (
         'gcloud beta container node-pools create'
         f' {node_pool_name}'
-        f' --region={zone_to_region(args.zone)}'
+        f' --zone={args.zone}'
         f' --cluster={args.cluster}'
         f' --project={args.project} --node-locations={args.zone}'
         f' --machine-type={system.gce_machine_type}'
@@ -1343,7 +1343,7 @@ def run_gke_node_pool_create_command(
         continue
       command = (
           'gcloud beta container node-pools create'
-          f' {node_pool_name} --node-version={gke_node_pool_version} --cluster={args.cluster} --project={args.project} --node-locations={args.zone} --region={zone_to_region(args.zone)} --num-nodes=1'
+          f' {node_pool_name} --node-version={gke_node_pool_version} --cluster={args.cluster} --project={args.project} --node-locations={args.zone} --zone={args.zone} --num-nodes=1'
           f' --machine-type={args.pathways_gce_machine_type} --scopes=storage-full,gke-default,{CLOUD_PLATFORM_AUTH_SCOPE_URL} --enable-autoscaling'
           ' --min-nodes=1 --max-nodes=20'
       )
@@ -1455,7 +1455,7 @@ def get_gke_server_config(args) -> tuple[int, GkeServerConfig | None]:
   """
   base_command = (
       'gcloud container get-server-config'
-      f' --project={args.project} --region={zone_to_region(args.zone)}'
+      f' --project={args.project} --zone={args.zone}'
   )
   default_rapid_gke_version_cmd = (
       base_command
@@ -1561,7 +1561,7 @@ def get_gke_node_pool_version(
   command_description = 'Determine current gke master version'
   command = (
       f'gcloud beta container clusters describe {args.cluster}'
-      f' --region {zone_to_region(args.zone)} --project {args.project}'
+      f' --zone {args.zone} --project {args.project}'
       ' --format="value(currentMasterVersion)"'
   )
 
@@ -2795,7 +2795,7 @@ def wait_for_job_completion(args) -> int:
           f'Timed out waiting for your workload after {timeout_msg}, see your'
           ' workload here:'
           # pylint: disable=line-too-long
-          f' https://console.cloud.google.com/kubernetes/service/{zone_to_region(args.zone)}/{args.cluster}/default/{args.workload}/details?project={args.project}'
+          f' https://console.cloud.google.com/kubernetes/service/{args.zone}/{args.cluster}/default/{args.workload}/details?project={args.project}'
       )
       return 124
     else:
@@ -2805,7 +2805,7 @@ def wait_for_job_completion(args) -> int:
   xpk_print(
       'Finished waiting for your workload, see your workload here:'
       # pylint: disable=line-too-long
-      f' https://console.cloud.google.com/kubernetes/service/{zone_to_region(args.zone)}/{args.cluster}/default/{args.workload}/details?project={args.project}'
+      f' https://console.cloud.google.com/kubernetes/service/{args.zone}/{args.cluster}/default/{args.workload}/details?project={args.project}'
   )
   status_cmd = (
       f'kubectl get jobset {args.workload} -o'

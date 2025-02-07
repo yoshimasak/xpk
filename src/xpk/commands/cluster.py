@@ -227,7 +227,7 @@ def cluster_create(args) -> None:
   xpk_print(
       'See your GKE Cluster here:'
       # pylint: disable=line-too-long
-      f' https://console.cloud.google.com/kubernetes/clusters/details/{zone_to_region(args.zone)}/{args.cluster}/details?project={args.project}'
+      f' https://console.cloud.google.com/kubernetes/clusters/details/{args.zone}/{args.cluster}/details?project={args.project}'
   )
   xpk_exit(0)
 
@@ -644,7 +644,7 @@ def run_gke_cluster_delete_command(args) -> int:
   command = (
       'gcloud beta container clusters delete'
       f' {args.cluster} --project={args.project}'
-      f' --region={zone_to_region(args.zone)} --quiet'
+      f' --zone={args.zone} --quiet'
   )
 
   return_code = run_command_with_updates(command, 'Cluster Delete', args)
@@ -670,7 +670,7 @@ def run_gke_clusters_list_command(args) -> int:
   """
   command = (
       'gcloud container clusters list'
-      f' --project={args.project} --region={zone_to_region(args.zone)}'
+      f' --project={args.project} --zone={args.zone}'
   )
   return_code = run_command_with_updates(command, 'Cluster List', args)
   if return_code != 0:
@@ -717,7 +717,7 @@ def run_gke_cluster_create_command(
   command = (
       'gcloud beta container clusters create'
       f' {args.cluster} --project={args.project}'
-      f' --region={zone_to_region(args.zone)}'
+      f' --zone={args.zone}'
       f' --node-locations={args.zone}'
       f' --cluster-version={gke_control_plane_version}'
       f' --machine-type={machine_type}'
@@ -770,7 +770,7 @@ def set_cluster_command(args) -> int:
   """
   command = (
       'gcloud container clusters get-credentials'
-      f' {args.cluster} --region={zone_to_region(args.zone)}'
+      f' {args.cluster} --zone={args.zone}'
       f' --project={args.project} &&'
       ' kubectl config view && kubectl config set-context --current'
       ' --namespace=default'

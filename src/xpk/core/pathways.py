@@ -183,7 +183,7 @@ def get_pathways_unified_query_link(args) -> str:
   query_params = (
       'resource.type%3D"k8s_container"%0A'
       f'resource.labels.project_id%3D"{args.project}"%0A'
-      f'resource.labels.location%3D"{zone_to_region(args.zone)}"%0A'
+      f'resource.labels.location%3D"{args.zone}"%0A'
       f'resource.labels.cluster_name%3D"{args.cluster}"%0A'
       f'resource.labels.pod_name:"{args.workload}-"%0A'
       'severity>%3DDEFAULT'
